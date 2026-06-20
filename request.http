@@ -1,0 +1,35 @@
+###
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "cosmin",
+  "name": "Cosmin",
+  "password": "1234"
+}
+###
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "cosmin",
+  "password": "1234"
+}
+
+###
+GET http://localhost:8080/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb3NtaW4iLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE3ODE5ODI2NTcsImV4cCI6MTc4MjAxODY1N30.2o7KyoHgAgYnAplWqo-7jp900wnBCnWmnU64UFiNIlU
+
+
+###
+POST http://localhost:8080/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb3NtaW4iLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE3ODE5ODI2NTcsImV4cCI6MTc4MjAxODY1N30.2o7KyoHgAgYnAplWqo-7jp900wnBCnWmnU64UFiNIlU
+
+Content-Type: application/json
+
+{
+  "name": "Laptop",
+  "price": 3000
+}
+
+###
