@@ -1,8 +1,11 @@
 package com.example.spring_security.product;
 
+import com.example.spring_security.exception.ProductAccessDeniedException;
+import com.example.spring_security.exception.ProductNotFoundException;
 import com.example.spring_security.user.User;
 import com.example.spring_security.user.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +31,7 @@ public class ProductService {
     }
 
     public void addProduct(Product product) {
-        User user = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         product.setUser(user);
         productRepository.save(product);
@@ -39,12 +42,12 @@ public class ProductService {
         Optional<Product> optionalProduct = productRepository.findById(id);
 
         if(optionalProduct.isEmpty()) {
-            throw new RuntimeException("");
+            throw new ProductNotFoundException("Product not found!");
         }
         Product current_product = optionalProduct.get();
 
             if(!current_product.getUser().getUsername().equals(getCurrentUsername())) {
-                throw new RuntimeException("");
+                throw new ProductAccessDeniedException("You can't change this product");
             }
             current_product.setName(product.getName());
             current_product.setPrice(product.getPrice());
@@ -55,11 +58,11 @@ public class ProductService {
         Optional<Product> optionalProduct = productRepository.findById(id);
 
         if(optionalProduct.isEmpty()) {
-            throw new RuntimeException("");
+            throw new ProductNotFoundException("Product not found!");
         }
         Product current_product = optionalProduct.get();
         if(!current_product.getUser().getUsername().equals(getCurrentUsername())) {
-            throw new RuntimeException("");
+            throw new ProductAccessDeniedException("You can't delete this product");
         }
         productRepository.delete(current_product);
     }

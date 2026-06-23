@@ -1,5 +1,6 @@
 package com.example.spring_security.product;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +21,12 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public void postProduct(@RequestBody Product product ) {
+    public void postProduct(@Valid @RequestBody Product product ) {
          productService.addProduct(product);
     }
 
     @PutMapping("/{id}")
-    public void putProduct(@RequestBody Product product, @PathVariable Long id){
+    public void putProduct(@Valid  @RequestBody Product product, @PathVariable Long id){
         productService.putProduct(product,id);
     }
 
