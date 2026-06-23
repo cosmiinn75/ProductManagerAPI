@@ -1,6 +1,8 @@
 package com.example.spring_security.user;
 
 import com.example.spring_security.config.JWTUtil;
+import com.example.spring_security.dto.AuthResponse;
+import com.example.spring_security.dto.RegisterRequest;
 import com.example.spring_security.exception.ExistingUsernameException;
 import com.example.spring_security.exception.InvalidCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +23,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String loginUser(String username , String password) {
+    public AuthResponse loginUser(String username , String password) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if(optionalUser.isEmpty()) {
             throw new InvalidCredentialsException("Invalid username or password");
@@ -30,17 +32,19 @@ public class UserService {
         if(!passwordEncoder.matches(password,user.getPassword())) {
          throw new InvalidCredentialsException("Invalid username or password");
         }
-    return jwtUtil.generateToken(user.getUsername(),user.getRole());
+    return new AuthResponse(jwtUtil.generateToken(user.getUsername(),user.getRole()));
     }
 
-    public User registerUser(User user) {
-        String rawPassword = user.getPassword();
-        if(userRepository.findByUsername(user.getUsername()).isPresent()) {
+    public User registerUser(RegisterRequest registerRequest) {
+        User savedUser = new User();
+        if(userRepository.findByUsername(registerRequest.username()).isPresent()) {
             throw new ExistingUsernameException("Username already exists");
         }
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setRole(Role.CUSTOMER);
-        return userRepository.save(user);
+        savedUser.setName(registerRequest.name());
+        savedUser.setPassword(passwordEncoder.encode(registerRequest.password()));
+        savedUser.setUsername(registerRequest.username());
+        savedUser.setRole(Role.CUSTOMER);
+        return userRepository.save(savedUser);
     }
 
 

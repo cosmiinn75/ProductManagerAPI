@@ -1,11 +1,13 @@
 package com.example.spring_security.product;
 
+import com.example.spring_security.dto.ProductRequest;
+import com.example.spring_security.dto.ProductResponse;
 import com.example.spring_security.exception.ProductAccessDeniedException;
 import com.example.spring_security.exception.ProductNotFoundException;
+import com.example.spring_security.exception.UserNotFoundException;
 import com.example.spring_security.user.User;
 import com.example.spring_security.user.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,18 +28,25 @@ public class ProductService {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
-    public List<Product> getAllProducts(){
-        return productRepository.findByUserUsername(getCurrentUsername());
+    public List<ProductResponse> getAllProducts(){
+
+        return productRepository.findByUserUsername(getCurrentUsername())
+                .stream()
+                .map(this::fromProductToProductResponse)
+                .toList();
     }
 
-    public void addProduct(Product product) {
-        User user = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+    public ProductResponse addProduct(ProductRequest productRequest) {
+        User user = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new UserNotFoundException("User not found"));
+        Product product = new Product();
         product.setUser(user);
-        productRepository.save(product);
+        product.setPrice(productRequest.price());
+        product.setName(productRequest.name());
+       Product savedProduct = productRepository.save(product);
+       return fromProductToProductResponse(savedProduct);
     }
 
-    public void putProduct(Product product, Long id) {
+    public void putProduct(ProductRequest product, Long id) {
 
         Optional<Product> optionalProduct = productRepository.findById(id);
 
@@ -49,8 +58,8 @@ public class ProductService {
             if(!current_product.getUser().getUsername().equals(getCurrentUsername())) {
                 throw new ProductAccessDeniedException("You can't change this product");
             }
-            current_product.setName(product.getName());
-            current_product.setPrice(product.getPrice());
+            current_product.setName(product.name());
+            current_product.setPrice(product.price());
             productRepository.save(current_product);
     }
 
@@ -67,7 +76,9 @@ public class ProductService {
         productRepository.delete(current_product);
     }
 
-
+    private ProductResponse fromProductToProductResponse(Product product){
+        return new ProductResponse( product.getId(),product.getName(), product.getPrice());
+    }
 
 
 }

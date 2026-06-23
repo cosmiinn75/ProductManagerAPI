@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<Map<String ,String>> invalidUsernameHandler(InvalidCredentialsException exc){
         Map<String,String> response = new HashMap<>();
-        response.put("error" , "Unathorized");
+        response.put("error" , "Unauthorized");
         response.put("message" , exc.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String,String>> exceptionHandler(Exception exc){
+    public ResponseEntity<Map<String,String>> exceptionHandle(){
         Map<String ,String > response = new HashMap<>();
         response.put("error", "Internal server error");
         response.put("message" , "Something went wrong");
