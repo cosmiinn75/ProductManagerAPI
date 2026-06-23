@@ -70,6 +70,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 
     }
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Map<String ,String>> forbiddenExceptionHandler(ForbiddenException exc){
+        Map<String,String> response = new HashMap<>();
+        response.put("error" , "Forbidden");
+        response.put("message" , exc.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String,String>> exceptionHandle(){

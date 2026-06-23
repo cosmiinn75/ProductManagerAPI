@@ -39,6 +39,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
 
+                        .requestMatchers(HttpMethod.GET,"/api/admin/users")
+                        .hasAuthority(Permission.READ_ALL_USERS.name())
+
+                        .requestMatchers(HttpMethod.PUT , "/api/admin/users/**")
+                        .hasAuthority(Permission.UPDATE_ONE_USER.name())
+
                         .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**")
                         .hasAuthority(Permission.READ_ALL_PRODUCTS.name())
 

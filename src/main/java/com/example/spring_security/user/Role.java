@@ -13,7 +13,9 @@ public enum Role {
             Permission.READ_ALL_PRODUCTS,
             Permission.SAVE_ONE_PRODUCT,
             Permission.UPDATE_ONE_PRODUCT,
-            Permission.DELETE_ONE_PRODUCT
+            Permission.DELETE_ONE_PRODUCT,
+            Permission.READ_ALL_USERS,
+            Permission.UPDATE_ONE_USER
     ));
 
     private final List<Permission> permissions;
