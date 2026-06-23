@@ -29,7 +29,7 @@ public class AdminController {
        return userService.changeUser(userRequest,id);
     }
 
-    @PutMapping("/role/{id}")
+    @PutMapping("/{id}/role")
     public UserResponse changeRole(@PathVariable Long id , @RequestBody RoleRequest role){
      return userService.changeRole(id,role);
     }
