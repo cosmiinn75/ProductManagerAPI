@@ -3,7 +3,12 @@ package com.example.spring_security.user;
 import java.util.List;
 
 public enum Role {
-    CUSTOMER(List.of(Permission.READ_ALL_PRODUCTS)),
+    CUSTOMER(List.of(
+            Permission.READ_ALL_PRODUCTS,
+            Permission.SAVE_ONE_PRODUCT,
+            Permission.UPDATE_ONE_PRODUCT,
+            Permission.DELETE_ONE_PRODUCT
+    )),
     ADMIN(List.of(
             Permission.READ_ALL_PRODUCTS,
             Permission.SAVE_ONE_PRODUCT,
